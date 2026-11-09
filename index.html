@@ -489,7 +489,7 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
   // Le risposte arrivano per email tramite Web3Forms (la chiave è pubblica per costruzione)
   var WEB3FORMS_KEY = "4c8837db-9b8b-429d-a405-4d142d1f93e1";
   // ...e vengono aggiunte a risposte.txt su GitHub tramite il Cloudflare Worker (vedi worker/worker.js)
-  var WORKER_URL = "https://laurea.leo-passe-04.workers.dev/";
+  var WORKER_URL = "https://laurea-risposte.leo-passe-04.workers.dev/";
 
   var forms = document.querySelectorAll("form.rsvp");
   for (var f = 0; f < forms.length; f++) { setupForm(forms[f]); }
