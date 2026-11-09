@@ -4,7 +4,7 @@
 
 const REPO = "leonardo-passeri/laurea_risposte"; // repository privato dove salvare
 const FILE = "risposte.txt";
-const ORIGIN = "https://leonardo-passeri.github.io"; // solo il sito può inviare
+const ORIGIN = "https://leonardo-passeri.github.io"; // solo il sito puo' inviare
 
 export default {
   async fetch(request, env) {
@@ -24,11 +24,12 @@ export default {
     const presenza = clean(data.presenza, 5);
     const evento = clean(data.evento, 30).toLowerCase();
     const messaggio = clean(data.messaggio, 1000);
-    if (!nome || !["Sì", "No"].includes(presenza) || !["proclamazione", "cena"].includes(evento)) {
+    const SI = "S\u00ec"; // "Si" con la i accentata, scritto cosi' per non rovinarsi copiando
+    if (!nome || ![SI, "No"].includes(presenza) || !["proclamazione", "cena"].includes(evento)) {
       return json({ ok: false, error: "Dati mancanti" }, 400, cors);
     }
 
-    // Formato: Nome Cognome: Sì (proclamazione) - Messaggio
+    // Formato: Nome Cognome: Si (proclamazione) - Messaggio
     const riga = `${nome}: ${presenza} (${evento}) - ${messaggio || "(nessun messaggio)"}\n`;
 
     // Se due persone rispondono nello stesso istante GitHub rifiuta il secondo salvataggio: riproviamo
@@ -36,7 +37,8 @@ export default {
       const res = await appendLine(env.GITHUB_TOKEN, riga, nome);
       if (res.ok) return json({ ok: true }, 200, cors);
       if (res.status !== 409 && res.status !== 422) {
-        return json({ ok: false, error: "GitHub ha risposto " + res.status }, 502, cors);
+        const hint = res.status === 404 ? " (repository non trovato o token senza accesso)" : res.status === 401 ? " (token non valido)" : "";
+        return json({ ok: false, error: "GitHub ha risposto " + res.status + hint }, 502, cors);
       }
     }
     return json({ ok: false, error: "Troppi invii insieme, riprova" }, 503, cors);
@@ -52,7 +54,7 @@ async function appendLine(token, riga, nome) {
     "User-Agent": "laurea-invito-worker",
   };
 
-  // Legge il file attuale (se non esiste ancora, verrà creato)
+  // Legge il file attuale (se non esiste ancora, verra' creato)
   const get = await fetch(url + "?t=" + Date.now(), { headers });
   let testo = "";
   let sha;
