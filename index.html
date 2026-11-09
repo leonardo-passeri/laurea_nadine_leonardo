@@ -138,7 +138,7 @@ dl.info dd{margin:0;min-width:0}
 
 /* RSVP */
 form{display:flex;flex-direction:column;gap:16px}
-label{font-weight:600;font-size:.92rem;display:block;margin-bottom:6px}
+label,.label{font-weight:600;font-size:.92rem;display:block;margin-bottom:6px}
 input[type=text],textarea{width:100%;font:inherit;color:var(--ink);background:var(--paper);
   border:1px solid var(--ink-soft);border-radius:10px;padding:10px 12px}
 textarea{min-height:76px;resize:vertical}
@@ -155,6 +155,8 @@ input:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px soli
 .stepper output{min-width:44px;text-align:center;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 .send{font:inherit;font-weight:700;font-size:1rem;cursor:pointer;background:var(--ink);color:#fff;
   border:0;border-radius:10px;padding:13px 18px}
+.send:disabled{opacity:.6;cursor:default}
+.reply .thanks p{margin:0}
 .err{color:var(--tbd-fg);font-size:.88rem;margin:0}
 .thanks{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
 .thanks .big{font-family:var(--f-display);font-weight:700;font-size:1.7rem;color:var(--ink);line-height:1.2}
@@ -369,8 +371,31 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
     </section>
 
     <section class="card reply">
-      <h2>Ci sarai? <span class="tag">conferma</span></h2>
-      <p>Faccelo sapere appena puoi scrivendo a <strong>Nadine</strong> o a <strong>Leonardo</strong>: ci serve per organizzarci.</p>
+      <h2>Ci sarai? <span class="tag">proclamazione</span></h2>
+      <form class="rsvp" data-evento="Proclamazione" novalidate>
+        <div>
+          <label for="p-nome">Il tuo nome</label>
+          <input type="text" id="p-nome" name="nome" autocomplete="name" maxlength="80">
+        </div>
+        <div>
+        <span class="label" id="p-ris">La tua risposta</span>
+        <div class="choice" role="group" aria-labelledby="p-ris">
+          <button type="button" class="yes" data-v="Sì" aria-pressed="false">Sì, vengo!</button>
+          <button type="button" class="no" data-v="No" aria-pressed="false">Non posso</button>
+        </div>
+        </div>
+        <div>
+          <label for="p-msg">Scrivi qualcosa di carino</label>
+          <textarea id="p-msg" name="messaggio" maxlength="1000"></textarea>
+        </div>
+        <p class="err" aria-live="polite" hidden></p>
+        <button type="submit" class="send">Invia</button>
+      </form>
+      <div class="thanks" hidden>
+        <div class="big"></div>
+        <p></p>
+        <button type="button" class="link again">Cambia risposta</button>
+      </div>
     </section>
   </section>
 
@@ -387,6 +412,34 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
       <div class="mono">cena.exe · caricamento in corso…</div>
       <button type="button" class="link" id="peek" style="color:var(--term-dim)">Sbircia i dettagli</button>
       <div class="hint" id="hint" aria-live="polite"></div>
+    </section>
+
+    <section class="card reply">
+      <h2>Ci sarai? <span class="tag">cena</span></h2>
+      <form class="rsvp" data-evento="Cena" novalidate>
+        <div>
+          <label for="c-nome">Il tuo nome</label>
+          <input type="text" id="c-nome" name="nome" autocomplete="name" maxlength="80">
+        </div>
+        <div>
+        <span class="label" id="c-ris">La tua risposta</span>
+        <div class="choice" role="group" aria-labelledby="c-ris">
+          <button type="button" class="yes" data-v="Sì" aria-pressed="false">Sì, vengo!</button>
+          <button type="button" class="no" data-v="No" aria-pressed="false">Non posso</button>
+        </div>
+        </div>
+        <div>
+          <label for="c-msg">Scrivi qualcosa di carino</label>
+          <textarea id="c-msg" name="messaggio" maxlength="1000"></textarea>
+        </div>
+        <p class="err" aria-live="polite" hidden></p>
+        <button type="submit" class="send">Invia</button>
+      </form>
+      <div class="thanks" hidden>
+        <div class="big"></div>
+        <p></p>
+        <button type="button" class="link again">Cambia risposta</button>
+      </div>
     </section>
   </section>
 
@@ -429,6 +482,72 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
     hi++;
     if (hi >= hints.length) { hi = 0; }
   });
+
+  // ===== moduli "Ci sarai?" =====
+  // Incolla qui l'URL dell'app web di Google Apps Script (vedi apps-script/Code.gs)
+  var SCRIPT_URL = "";
+
+  var forms = document.querySelectorAll("form.rsvp");
+  for (var f = 0; f < forms.length; f++) { setupForm(forms[f]); }
+
+  function setupForm(form){
+    var card = form.parentNode;
+    var thanks = card.querySelector(".thanks");
+    var err = form.querySelector(".err");
+    var send = form.querySelector(".send");
+    var nome = form.querySelector("[name=nome]");
+    var msg = form.querySelector("[name=messaggio]");
+    var choices = form.querySelectorAll(".choice button");
+    var presenza = "";
+
+    // se il link finisce con #Nome, il nome è già compilato
+    if (h && /^[A-Za-z0-9-]+$/.test(h)) { nome.value = h.replace(/-/g, " "); }
+
+    for (var i = 0; i < choices.length; i++) {
+      choices[i].addEventListener("click", function(){
+        presenza = this.getAttribute("data-v");
+        for (var j = 0; j < choices.length; j++) {
+          choices[j].setAttribute("aria-pressed", choices[j] === this ? "true" : "false");
+        }
+        err.hidden = true;
+      });
+    }
+
+    function fail(text){ err.textContent = text; err.hidden = false; }
+
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      if (!nome.value.trim()) { fail("Scrivi il tuo nome, così sappiamo chi sei."); nome.focus(); return; }
+      if (!presenza) { fail("Scegli Sì o No."); return; }
+      if (!SCRIPT_URL) { fail("Il modulo non è ancora attivo: per ora scrivi a Nadine o a Leonardo."); return; }
+
+      send.disabled = true;
+      send.textContent = "Invio in corso…";
+      err.hidden = true;
+      var data = new URLSearchParams({
+        evento: form.getAttribute("data-evento"),
+        nome: nome.value.trim(),
+        presenza: presenza,
+        messaggio: msg.value.trim()
+      });
+      // no-cors: Google Apps Script non permette di leggere la risposta, basta che la richiesta parta
+      fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: data })
+        .then(function(){
+          var yes = presenza === "Sì";
+          thanks.querySelector(".big").textContent = yes ? "Grazie! Ci vediamo lì" : "Peccato!";
+          thanks.querySelector("p").textContent = yes ? "Abbiamo segnato che ci sarai, cru cru!" : "Grazie per avercelo detto, ci mancherai.";
+          form.hidden = true;
+          thanks.hidden = false;
+        })
+        .catch(function(){ fail("Non siamo riusciti a inviare: controlla la connessione e riprova."); })
+        .then(function(){ send.disabled = false; send.textContent = "Invia"; });
+    });
+
+    thanks.querySelector(".again").addEventListener("click", function(){
+      thanks.hidden = true;
+      form.hidden = false;
+    });
+  }
 })();
 </script>
 
