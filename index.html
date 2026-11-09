@@ -385,7 +385,7 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
         </div>
         </div>
         <div>
-          <label for="p-msg">Scrivi qualcosa di carino</label>
+          <label for="p-msg">Scrivi qualcosa di carino!</label>
           <textarea id="p-msg" name="messaggio" maxlength="1000"></textarea>
         </div>
         <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
@@ -488,6 +488,8 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
   // ===== moduli "Ci sarai?" =====
   // Le risposte arrivano per email tramite Web3Forms (la chiave è pubblica per costruzione)
   var WEB3FORMS_KEY = "4c8837db-9b8b-429d-a405-4d142d1f93e1";
+  // ...e vengono aggiunte a risposte.txt su GitHub tramite il Cloudflare Worker (vedi worker/worker.js)
+  var WORKER_URL = "";
 
   var forms = document.querySelectorAll("form.rsvp");
   for (var f = 0; f < forms.length; f++) { setupForm(forms[f]); }
@@ -527,23 +529,30 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
       send.textContent = "Invio in corso…";
       err.hidden = true;
       var evento = form.getAttribute("data-evento");
-      var data = {
+      var testoNome = nome.value.trim();
+      var testoMsg = msg.value.trim();
+
+      // invio per email
+      var email = postJson("https://api.web3forms.com/submit", {
         access_key: WEB3FORMS_KEY,
-        subject: evento + ": " + nome.value.trim() + " → " + presenza,
+        subject: evento + ": " + testoNome + " → " + presenza,
         from_name: "Invito di laurea",
         Evento: evento,
-        Nome: nome.value.trim(),
+        Nome: testoNome,
         "Ci sarà?": presenza,
-        Messaggio: msg.value.trim() || "(nessun messaggio)"
-      };
-      fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify(data)
-      })
-        .then(function(r){ return r.json(); })
-        .then(function(res){
-          if (!res.success) { throw new Error(res.message); }
+        Messaggio: testoMsg || "(nessun messaggio)"
+      }).then(function(res){ if (!res.success) { throw new Error(res.message); } });
+
+      // riga nel file risposte.txt su GitHub
+      var file = !WORKER_URL ? Promise.reject(new Error("worker non configurato")) :
+        postJson(WORKER_URL, { evento: evento, nome: testoNome, presenza: presenza, messaggio: testoMsg })
+          .then(function(res){ if (!res.ok) { throw new Error(res.error); } });
+
+      // basta che almeno uno dei due salvataggi riesca
+      var ok = false;
+      Promise.all([email.then(function(){ ok = true; }, function(){}), file.then(function(){ ok = true; }, function(){})])
+        .then(function(){
+          if (!ok) { throw new Error("invio fallito"); }
           var yes = presenza === "Sì";
           thanks.querySelector(".big").textContent = yes ? "Grazie! Ci vediamo lì" : "Peccato!";
           thanks.querySelector("p").textContent = yes ? "Abbiamo segnato che ci sarai, cru cru!" : "Grazie per avercelo detto, ci mancherai.";
@@ -553,6 +562,14 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
         .catch(function(){ fail("Non siamo riusciti a inviare: controlla la connessione e riprova."); })
         .then(function(){ send.disabled = false; send.textContent = "Invia"; });
     });
+
+    function postJson(url, body){
+      return fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(body)
+      }).then(function(r){ return r.json(); });
+    }
 
     thanks.querySelector(".again").addEventListener("click", function(){
       thanks.hidden = true;
