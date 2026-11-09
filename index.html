@@ -388,6 +388,7 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
           <label for="p-msg">Scrivi qualcosa di carino</label>
           <textarea id="p-msg" name="messaggio" maxlength="1000"></textarea>
         </div>
+        <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
         <p class="err" aria-live="polite" hidden></p>
         <button type="submit" class="send">Invia</button>
       </form>
@@ -432,6 +433,7 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
           <label for="c-msg">Scrivi qualcosa di carino</label>
           <textarea id="c-msg" name="messaggio" maxlength="1000"></textarea>
         </div>
+        <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
         <p class="err" aria-live="polite" hidden></p>
         <button type="submit" class="send">Invia</button>
       </form>
@@ -484,8 +486,8 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
   });
 
   // ===== moduli "Ci sarai?" =====
-  // Incolla qui l'URL dell'app web di Google Apps Script (vedi apps-script/Code.gs)
-  var SCRIPT_URL = "";
+  // Le risposte arrivano per email tramite Web3Forms (la chiave è pubblica per costruzione)
+  var WEB3FORMS_KEY = "4c8837db-9b8b-429d-a405-4d142d1f93e1";
 
   var forms = document.querySelectorAll("form.rsvp");
   for (var f = 0; f < forms.length; f++) { setupForm(forms[f]); }
@@ -519,20 +521,29 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
       e.preventDefault();
       if (!nome.value.trim()) { fail("Scrivi il tuo nome, così sappiamo chi sei."); nome.focus(); return; }
       if (!presenza) { fail("Scegli Sì o No."); return; }
-      if (!SCRIPT_URL) { fail("Il modulo non è ancora attivo: per ora scrivi a Nadine o a Leonardo."); return; }
+      if (form.querySelector("[name=botcheck]").checked) { return; }
 
       send.disabled = true;
       send.textContent = "Invio in corso…";
       err.hidden = true;
-      var data = new URLSearchParams({
-        evento: form.getAttribute("data-evento"),
-        nome: nome.value.trim(),
-        presenza: presenza,
-        messaggio: msg.value.trim()
-      });
-      // no-cors: Google Apps Script non permette di leggere la risposta, basta che la richiesta parta
-      fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: data })
-        .then(function(){
+      var evento = form.getAttribute("data-evento");
+      var data = {
+        access_key: WEB3FORMS_KEY,
+        subject: evento + ": " + nome.value.trim() + " → " + presenza,
+        from_name: "Invito di laurea",
+        Evento: evento,
+        Nome: nome.value.trim(),
+        "Ci sarà?": presenza,
+        Messaggio: msg.value.trim() || "(nessun messaggio)"
+      };
+      fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(data)
+      })
+        .then(function(r){ return r.json(); })
+        .then(function(res){
+          if (!res.success) { throw new Error(res.message); }
           var yes = presenza === "Sì";
           thanks.querySelector(".big").textContent = yes ? "Grazie! Ci vediamo lì" : "Peccato!";
           thanks.querySelector("p").textContent = yes ? "Abbiamo segnato che ci sarai, cru cru!" : "Grazie per avercelo detto, ci mancherai.";
