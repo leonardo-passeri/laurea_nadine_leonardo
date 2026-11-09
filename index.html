@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Laurea Nadine &amp; Leonardo</title>
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: una colonna centrale come un biglietto; la home ha due "porte" (Proclamazione, Cena); scarabocchi a inchiostro fluttuano attorno */
+:root{
+  --paper:#eef3f8;
+  --card:#fbfcfe;
+  --ink:#1f2f57;
+  --ink-soft:#5a6a8e;
+  --hibiscus:#d6457a;
+  --line:#c9d4e6;
+  --term-fg:#e7ecf7;
+  --term-ok:#8fe3b0;
+  --term-dim:#93a3c8;
+  --term-pk:#ff9fc2;
+  --tbd-bg:#fde6ef;
+  --tbd-fg:#9b2552;
+  --f-display:"Gowun Batang", Georgia, serif;
+  --f-body:"Gowun Dodum", "Segoe UI", system-ui, sans-serif;
+  --f-hand:"Gaegu", "Comic Sans MS", cursive;
+  --f-mono:"JetBrains Mono", ui-monospace, monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:var(--f-body);font-size:16px;line-height:1.6;overflow-x:hidden;
+  background-image:radial-gradient(var(--line) 1px, transparent 1px);background-size:22px 22px}
+
+/* ---- scarabocchi ---- */
+/* gli scarabocchi stanno solo nei margini ai lati del biglietto (620px + un po' di respiro) */
+.side{position:fixed;top:0;bottom:0;width:calc((100% - 610px) / 2);pointer-events:none;z-index:0}
+.side.left{left:0}
+.side.right{right:0}
+.side .dd{width:min(var(--s,70px), 88%);opacity:.55}
+.side.left .dd{left:auto;right:calc(var(--x,20%) * .35)}
+.side.right .dd{left:calc(var(--x,20%) * .35)}
+/* sul telefono: cornice sottile lungo i due bordi */
+@media (max-width:759px){
+  .side{width:40px}
+  .side .dd{width:min(var(--s,70px), 32px)}
+  .side.left .dd{right:4px}
+  .side.right .dd{left:4px}
+  .side .tx{display:none}
+  body main{padding-left:max(44px, env(safe-area-inset-left, 0px));padding-right:max(44px, env(safe-area-inset-right, 0px))}
+}
+.dd{position:absolute;width:var(--s,70px);transform:rotate(calc(var(--r1,-6deg) * .6))}
+.dd svg{width:100%;height:auto;display:block;overflow:visible}
+.st{fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.hangul{font-family:var(--f-hand);font-weight:700;fill:var(--hibiscus)}
+
+/* ---- pagina ---- */
+main{position:relative;z-index:1;max-width:620px;margin:0 auto;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  padding-block:36px 56px;display:flex;flex-direction:column;gap:26px}
+
+.hero{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+.hello{font-family:var(--f-display);font-style:italic;font-size:1.2rem;color:var(--ink-soft);line-height:1.2}
+.kicker{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(2.2rem,8vw,3.5rem);line-height:1.05;margin:6px 0 2px;text-wrap:balance}
+h1 .amp{font-weight:400;color:var(--hibiscus)}
+.sub{color:var(--ink-soft);max-width:34ch;text-wrap:balance;margin:0}
+
+.view{display:flex;flex-direction:column;gap:22px;animation:pop .35s ease-out}
+@keyframes pop{from{opacity:.4;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* porte */
+.doors{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:460px){.doors{grid-template-columns:1fr}}
+.door{font:inherit;color:var(--ink);text-align:left;cursor:pointer;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  box-shadow:0 6px 18px rgba(31,47,87,.08);padding:18px 18px 16px;display:flex;flex-direction:column;gap:6px;
+  transition:transform .15s, box-shadow .15s, border-color .15s}
+.door:hover{transform:translateY(-2px);border-color:var(--ink-soft);box-shadow:0 10px 24px rgba(31,47,87,.12)}
+.door:active{transform:none}
+.door svg{width:64px;height:54px}
+.door .dname{font-family:var(--f-display);font-weight:700;font-size:1.35rem;line-height:1.2}
+.door .dsub{color:var(--ink-soft);font-size:.92rem}
+.door .go{font-weight:600;font-size:.88rem;letter-spacing:.04em;color:var(--hibiscus);margin-top:4px}
+.door.soon{background:var(--ink);color:#fff;border-color:var(--ink)}
+.door.soon .go{color:var(--term-pk)}
+.door.soon .dsub{color:var(--term-dim)}
+.door.soon .st{stroke:#fff}
+
+.back{align-self:flex-start;font:inherit;font-weight:600;font-size:.95rem;
+  background:none;border:0;color:var(--ink);cursor:pointer;padding:4px 2px}
+.back:hover{color:var(--hibiscus)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  box-shadow:0 6px 18px rgba(31,47,87,.08);padding:22px 22px 24px}
+.card h2{font-family:var(--f-display);font-size:1.45rem;margin:0 0 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card h2 .tag{font-family:var(--f-body);font-weight:400;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+
+.terminal{background:var(--ink);color:var(--term-fg);border-radius:12px;padding:14px 16px;
+  font-family:var(--f-mono);font-size:.82rem;line-height:1.7;overflow-x:auto}
+.terminal .code{margin:0;font:inherit;white-space:pre}
+.terminal .kw{color:#9fc3ff}.terminal .ty{color:#f2d16b}
+.terminal .out{border-top:1px dashed var(--term-dim);margin-top:10px;padding-top:8px}
+.cru{font-family:var(--f-hand);font-weight:700;fill:var(--ink-soft)}
+.terminal .ok{color:var(--term-ok)}.terminal .dim{color:var(--term-dim)}.terminal .pk{color:var(--term-pk)}
+
+dl.info{display:grid;grid-template-columns:auto 1fr;gap:12px 18px;margin:0}
+dl.info dt{font-weight:600;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--hibiscus);line-height:1.6;padding-top:2px}
+dl.info dd{margin:0;min-width:0}
+.addr{color:var(--ink-soft);font-size:.92rem}
+.reply p{margin:0;max-width:52ch}
+.maps{display:inline-block;margin:4px 0 2px;font-size:.88rem;font-weight:600;color:var(--ink);
+  text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:3px 12px;background:var(--paper)}
+.maps:hover{border-color:var(--ink-soft)}
+.ok-pill{font-family:var(--f-body);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;
+  background:#dff3e8;color:#1e6646;border-radius:999px;padding:2px 9px}
+.tbd{display:inline-block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--tbd-bg);color:var(--tbd-fg);border-radius:999px;padding:1px 8px;margin-left:4px;vertical-align:2px}
+
+/* coming soon */
+.soon-screen{background:var(--ink);color:var(--term-fg);border-radius:14px;
+  box-shadow:0 6px 18px rgba(31,47,87,.12);padding:30px 22px 26px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:12px;position:relative;overflow:hidden}
+.soon-screen .big{font-family:var(--f-display);font-weight:700;font-size:clamp(2.2rem,10vw,3.2rem);line-height:1;color:#fff}
+.soon-screen .big .cur{display:inline-block;width:.45em;height:.08em;background:var(--term-pk);margin-left:4px;vertical-align:.05em;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.soon-screen .ko{color:var(--term-pk);font-size:.95rem;letter-spacing:.1em}
+.soon-screen p{margin:0;max-width:34ch;color:var(--term-dim)}
+.bar{width:min(100%,320px);height:6px;border:0;background:rgba(255,255,255,.15);border-radius:999px;overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;width:72%;background:var(--term-pk);
+  animation:load 2.4s ease-in-out infinite alternate}
+@keyframes load{from{width:58%}to{width:78%}}
+.mono{font-family:var(--f-mono);font-size:.8rem;color:var(--term-dim)}
+.hint{font-size:.95rem;color:var(--term-ok);min-height:1.4em}
+.date-ipo{font-family:var(--f-display);font-size:1.15rem;color:#fff}
+
+/* RSVP */
+form{display:flex;flex-direction:column;gap:16px}
+label{font-weight:600;font-size:.92rem;display:block;margin-bottom:6px}
+input[type=text],textarea{width:100%;font:inherit;color:var(--ink);background:var(--paper);
+  border:1px solid var(--ink-soft);border-radius:10px;padding:10px 12px}
+textarea{min-height:76px;resize:vertical}
+input:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid var(--hibiscus);outline-offset:2px}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choice button{font:inherit;font-size:1rem;font-weight:600;cursor:pointer;
+  background:var(--card);color:var(--ink);border:1px solid var(--ink-soft);border-radius:10px;padding:11px 8px;
+  transition:transform .12s, box-shadow .12s, background .12s}
+.choice button:hover{border-color:var(--ink)}
+.choice button[aria-pressed=true].yes{background:var(--ink);color:#fff;border-color:var(--ink)}
+.choice button[aria-pressed=true].no{background:var(--ink-soft);color:#fff;border-color:var(--ink-soft)}
+.stepper{display:inline-flex;align-items:center;border:1px solid var(--ink-soft);border-radius:10px;overflow:hidden}
+.stepper button{font:inherit;font-size:1.2rem;width:42px;height:40px;border:0;background:var(--paper);color:var(--ink);cursor:pointer}
+.stepper output{min-width:44px;text-align:center;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.send{font:inherit;font-weight:700;font-size:1rem;cursor:pointer;background:var(--ink);color:#fff;
+  border:0;border-radius:10px;padding:13px 18px}
+.err{color:var(--tbd-fg);font-size:.88rem;margin:0}
+.thanks{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+.thanks .big{font-family:var(--f-display);font-weight:700;font-size:1.7rem;color:var(--ink);line-height:1.2}
+.link{background:none;border:0;color:var(--ink-soft);text-decoration:underline;font:inherit;cursor:pointer}
+
+footer{text-align:center;color:var(--ink-soft);font-size:.85rem;display:flex;flex-direction:column;align-items:center;gap:4px}
+footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;color:var(--ink)}
+.proto{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;border:1.5px dashed var(--ink-soft);border-radius:8px;padding:4px 10px}
+
+@media (prefers-reduced-motion:reduce){
+  .view,.bar i,.soon-screen .big .cur{animation:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ======= definizioni degli scarabocchi ======= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="2.2"/></filter>
+
+    <!-- piccione torraiolo: corpo grigio, collo cangiante, due barre scure sull'ala, coda con banda scura -->
+    <symbol id="i-pigeon" viewBox="0 0 120 100">
+      <defs>
+        <linearGradient id="neck" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#4fae8f"/><stop offset=".55" stop-color="#7d5aa6"/><stop offset="1" stop-color="#5d6880"/>
+        </linearGradient>
+      </defs>
+      <g filter="url(#wobble)">
+        <!-- corpo -->
+        <path d="M10 50 L40 44 C52 38 70 36 80 32 C78 22 84 16 90 16 C97 16 100 22 98 30 C97 34 95 36 94 38 C102 46 102 62 90 70 C76 78 56 74 44 64 L12 60 Z" fill="#aeb6c4"/>
+        <!-- testa e collo più scuri -->
+        <path d="M80 32 C78 22 84 16 90 16 C97 16 100 22 98 30 C97 34 95 36 94 38 C97 45 92 52 84 51 C77 47 76 40 80 32Z" fill="#6c7790"/>
+        <!-- riflessi verde-viola sul collo -->
+        <path d="M82 38 C88 36 95 39 95 44 C93 50 86 51 82 48 C79 45 79 41 82 38Z" fill="url(#neck)" opacity=".9"/>
+        <!-- ala ripiegata -->
+        <path d="M46 46 C60 40 76 42 84 52 C82 62 66 66 46 62 L20 57 Z" fill="#c7cedb"/>
+        <path d="M46 46 C60 40 76 42 84 52 C82 62 66 66 46 62 L20 57" fill="none" stroke="#1f2f57" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- barre scure dell'ala -->
+        <path d="M54 49 C60 52 66 55 72 55 M50 54 C56 57 62 59 68 60" fill="none" stroke="#2f3a52" stroke-width="3" stroke-linecap="round"/>
+        <!-- penne remiganti e banda della coda -->
+        <path d="M22 57 L44 61 M26 54 L42 57" fill="none" stroke="#56607a" stroke-width="2" stroke-linecap="round"/>
+        <path d="M11 51 L13 59" fill="none" stroke="#2f3a52" stroke-width="5" stroke-linecap="round"/>
+        <!-- contorno -->
+        <path class="st" stroke-width="2.2" d="M10 50 L40 44 C52 38 70 36 80 32 C78 22 84 16 90 16 C97 16 100 22 98 30 C97 34 95 36 94 38 C102 46 102 62 90 70 C76 78 56 74 44 64 L12 60 Z"/>
+        <!-- occhio arancio, becco scuro con la caruncola chiara -->
+        <circle cx="91.5" cy="24" r="3" fill="#e8742c"/>
+        <circle cx="91.8" cy="24" r="1.3" fill="#1b2235"/>
+        <path d="M98 26 L106 28.5 L98 30.5 Z" fill="#3a3f4a"/>
+        <ellipse cx="99.5" cy="25.8" rx="2.2" ry="1.3" fill="#f1ece4"/>
+        <!-- zampe rosate -->
+        <path d="M62 74 L60 88 M55 88 L64 88 M72 73 L74 88 M70 88 L79 88" fill="none" stroke="#d98592" stroke-width="2.6" stroke-linecap="round"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-pc" viewBox="0 0 120 100">
+      <g filter="url(#wobble)">
+        <rect x="14" y="10" width="92" height="62" rx="8" fill="#fbfcfe"/>
+        <rect class="st" x="14" y="10" width="92" height="62" rx="8"/>
+        <rect x="23" y="19" width="74" height="44" rx="4" fill="#1f2f57"/>
+        <text x="60" y="48" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="18" font-weight="600" fill="#8fe3b0">&lt;/&gt;</text>
+        <path class="st" d="M52 72 L48 86 M68 72 L72 86 M36 88 L84 88"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-chip" viewBox="0 0 100 100">
+      <g filter="url(#wobble)">
+        <rect x="26" y="26" width="48" height="48" rx="6" fill="#d9e2f2"/>
+        <rect class="st" x="26" y="26" width="48" height="48" rx="6"/>
+        <rect x="38" y="38" width="24" height="24" rx="3" fill="none" stroke="#d6457a" stroke-width="2.6"/>
+        <path class="st" d="M36 26V14 M50 26V14 M64 26V14 M36 74V86 M50 74V86 M64 74V86 M26 36H14 M26 50H14 M26 64H14 M74 36H86 M74 50H86 M74 64H86"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-taeguk" viewBox="0 0 100 100">
+      <g filter="url(#wobble)">
+        <circle cx="50" cy="50" r="36" fill="#0047a0"/>
+        <path d="M14 50 A36 36 0 0 1 86 50 A18 18 0 0 1 50 50 A18 18 0 0 0 14 50 Z" fill="#cd2e3a"/>
+        <circle class="st" cx="50" cy="50" r="36"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-flower" viewBox="0 0 100 100">
+      <g filter="url(#wobble)">
+        <g fill="#f6b7cf" stroke="#1f2f57" stroke-width="2.4" stroke-linejoin="round">
+          <path d="M50 50 C36 40 34 16 50 12 C66 16 64 40 50 50Z"/>
+          <path d="M50 50 C36 40 34 16 50 12 C66 16 64 40 50 50Z" transform="rotate(72 50 50)"/>
+          <path d="M50 50 C36 40 34 16 50 12 C66 16 64 40 50 50Z" transform="rotate(144 50 50)"/>
+          <path d="M50 50 C36 40 34 16 50 12 C66 16 64 40 50 50Z" transform="rotate(216 50 50)"/>
+          <path d="M50 50 C36 40 34 16 50 12 C66 16 64 40 50 50Z" transform="rotate(288 50 50)"/>
+        </g>
+        <circle cx="50" cy="50" r="10" fill="#d6457a"/>
+        <path d="M50 50 L50 34" stroke="#f2d16b" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="50" cy="32" r="3.5" fill="#f2d16b"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-cap" viewBox="0 0 120 100">
+      <g filter="url(#wobble)">
+        <path d="M60 18 L108 38 L60 58 L12 38 Z" fill="#1f2f57" stroke="#1f2f57" stroke-width="2.6" stroke-linejoin="round"/>
+        <path class="st" d="M32 47 V66 C44 78 76 78 88 66 V47"/>
+        <path d="M60 38 L98 50 V70" fill="none" stroke="#d6457a" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="98" cy="74" r="4.5" fill="#d6457a"/>
+      </g>
+    </symbol>
+
+    <!-- calici per la cena -->
+    <symbol id="i-glass" viewBox="0 0 120 100">
+      <g filter="url(#wobble)">
+        <path d="M30 14 H58 C60 34 54 48 44 50 C34 48 28 34 30 14Z" fill="#f6b7cf"/>
+        <path class="st" d="M30 14 H58 C60 34 54 48 44 50 C34 48 28 34 30 14Z M44 50 V82 M32 84 H56"/>
+        <path d="M66 20 H94 C96 40 90 54 80 56 C70 54 64 40 66 20Z" fill="#fff4c2"/>
+        <path class="st" d="M66 20 H94 C96 40 90 54 80 56 C70 54 64 40 66 20Z M80 56 V86 M68 88 H92"/>
+        <path d="M58 8 L62 2 M62 12 L70 8 M54 4 L54 0" fill="none" stroke="#d6457a" stroke-width="2.6" stroke-linecap="round"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-res" viewBox="0 0 140 40">
+      <path class="st" filter="url(#wobble)" d="M6 20 H34 L40 8 L52 32 L64 8 L76 32 L88 8 L100 32 L106 20 H134"/>
+    </symbol>
+
+    <symbol id="i-bulb" viewBox="0 0 100 110">
+      <g filter="url(#wobble)">
+        <path d="M50 12 C28 12 18 30 22 46 C25 58 36 62 36 76 H64 C64 62 75 58 78 46 C82 30 72 12 50 12Z" fill="#fff4c2"/>
+        <path class="st" d="M50 12 C28 12 18 30 22 46 C25 58 36 62 36 76 H64 C64 62 75 58 78 46 C82 30 72 12 50 12Z"/>
+        <path class="st" d="M38 84 H62 M41 92 H59 M44 76 L46 52 L50 58 L54 52 L56 76"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="side left" aria-hidden="true">
+  <div class="dd" style="top:3%;--x:12%;--s:96px;--t:6s;--r1:-8deg;--r2:4deg"><svg><use href="#i-pigeon"/></svg></div>
+  <div class="dd tx" style="top:15%;--x:30%;--s:110px;--t:5s;--r1:-12deg;--r2:-2deg"><svg viewBox="0 0 120 40"><text class="cru" x="60" y="30" text-anchor="middle" font-size="26">cru cru cru!</text></svg></div>
+  <div class="dd" style="top:23%;--x:62%;--s:44px;--t:9s;--d:-5s"><svg><use href="#i-bulb"/></svg></div>
+  <div class="dd" style="top:31%;--x:12%;--s:84px;--t:7s;--d:-3s;--r1:4deg;--r2:-6deg"><svg><use href="#i-pc"/></svg></div>
+  <div class="dd tx" style="top:43%;--x:36%;--s:100px;--t:6s;--d:-1s;--r1:-4deg;--r2:8deg"><svg viewBox="0 0 120 40"><text class="cru" x="60" y="30" text-anchor="middle" font-size="26">cru cru cru</text></svg></div>
+  <div class="dd tx" style="top:51%;--x:14%;--s:64px;--t:10s"><svg viewBox="0 0 80 40"><text class="hangul" x="40" y="30" text-anchor="middle" font-size="30">졸업</text></svg></div>
+  <div class="dd" style="top:60%;--x:52%;--s:60px;--t:6.5s;--d:-1s"><svg><use href="#i-chip"/></svg></div>
+  <div class="dd" style="top:72%;--x:10%;--s:110px;--t:8s;--r1:-14deg;--r2:-4deg"><svg viewBox="0 0 140 40"><use href="#i-res"/></svg></div>
+  <div class="dd tx" style="top:84%;--x:28%;--s:100px;--t:7s;--d:-3s;--r1:-10deg;--r2:0deg"><svg viewBox="0 0 120 40"><text class="cru" x="60" y="30" text-anchor="middle" font-size="26">cru cru cru</text></svg></div>
+</div>
+<div class="side right" aria-hidden="true">
+  <div class="dd" style="top:4%;--x:48%;--s:78px;--t:8s;--d:-2s"><svg><use href="#i-flower"/></svg></div>
+  <div class="dd tx" style="top:16%;--x:14%;--s:84px;--t:8.5s;--d:-3.5s"><svg viewBox="0 0 100 40"><text class="hangul" x="50" y="30" text-anchor="middle" font-size="28">축하해!</text></svg></div>
+  <div class="dd" style="top:25%;--x:56%;--s:56px;--t:9s"><svg><use href="#i-taeguk"/></svg></div>
+  <div class="dd tx" style="top:36%;--x:16%;--s:110px;--t:6.5s;--d:-4s"><svg viewBox="0 0 130 40"><text class="cru" x="65" y="30" text-anchor="middle" font-size="26">CRU CRU CRU</text></svg></div>
+  <div class="dd" style="top:45%;--x:42%;--s:90px;--t:7.5s;--d:-4s"><svg><use href="#i-cap"/></svg></div>
+  <div class="dd tx" style="top:58%;--x:12%;--s:110px;--t:5.5s;--d:-2s;--r1:6deg;--r2:14deg"><svg viewBox="0 0 130 40"><text class="cru" x="65" y="30" text-anchor="middle" font-size="26">CRU CRU CRU!</text></svg></div>
+  <div class="dd" style="top:67%;--x:36%;--s:90px;--t:7s;--d:-1.5s;--r1:8deg;--r2:-2deg"><svg><use href="#i-pigeon"/></svg></div>
+  <div class="dd" style="top:83%;--x:50%;--s:70px;--t:6s;--d:-2.5s"><svg><use href="#i-flower"/></svg></div>
+</div>
+
+<main>
+  <header class="hero">
+    <div class="hello" id="hello">Ciao!</div>
+    <div class="kicker">Ingegneria Informatica ed Elettronica · UniPG</div>
+    <h1>Nadine <span class="amp">&amp;</span> Leonardo</h1>
+    <p class="sub">Ci laureiamo! Ci farebbe tantissimo piacere festeggiare insieme a te.</p>
+  </header>
+
+  <!-- ===== HOME ===== -->
+  <section class="view" id="v-home">
+    <section class="terminal" aria-label="Codice Java della laurea">
+<pre class="code"><span class="kw">public class</span> <span class="ty">Laurea</span> {
+  <span class="kw">public static void</span> main(<span class="ty">String</span>[] args) {
+    <span class="ty">String</span>[] noi = {<span class="pk">"Nadine"</span>, <span class="pk">"Leonardo"</span>};
+    <span class="kw">for</span> (<span class="ty">String</span> s : noi) {
+      <span class="ty">System</span>.out.println(s + <span class="pk">" ce l'ha fatta!"</span>);
+    }
+    <span class="ty">Festa</span>.invita(<span class="pk">"te"</span>); <span class="dim">// sì, proprio te</span>
+  }
+}</pre>
+      <div class="out">
+        <div><span class="dim">$</span> javac Laurea.java &amp;&amp; java Laurea</div>
+        <div>Nadine ce l'ha fatta!</div>
+        <div>Leonardo ce l'ha fatta!</div>
+        <div><span class="ok">BUILD SUCCESSFUL</span> · 0 errori, dopo 3 anni</div>
+      </div>
+    </section>
+
+    <div class="doors">
+      <button type="button" class="door" id="go-procl">
+        <svg aria-hidden="true"><use href="#i-cap"/></svg>
+        <span class="dname">Proclamazione</span>
+        <span class="dsub">Dove e quando ci proclamano dottori</span>
+        <span class="go">Apri →</span>
+      </button>
+      <button type="button" class="door soon" id="go-cena">
+        <svg aria-hidden="true"><use href="#i-glass"/></svg>
+        <span class="dname">Cena</span>
+        <span class="dsub">La festa dopo, tutti insieme</span>
+        <span class="go">Coming soon →</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== PROCLAMAZIONE ===== -->
+  <section class="view" id="v-procl" hidden>
+    <button type="button" class="back" data-home>← Indietro</button>
+
+    <section class="card">
+      <h2>Proclamazione <span class="tag">dove &amp; quando</span></h2>
+      <dl class="info">
+        <dt>Quando</dt>
+        <dd>Giovedì 3 dicembre 2026<br><span class="addr">Orario</span> <span class="tbd">da confermare</span></dd>
+        <dt>Dove</dt>
+        <dd>Dipartimento di Ingegneria, Università degli Studi di Perugia<br><span class="addr">Via Goffredo Duranti 93, 06125 Perugia</span><br><a class="maps" href="https://www.google.com/maps/search/?api=1&amp;query=Dipartimento+di+Ingegneria+Universit%C3%A0+di+Perugia%2C+Via+Goffredo+Duranti+93%2C+06125+Perugia" target="_blank" rel="noopener">Apri in Google Maps ↗</a><br><span class="addr">Aula</span> <span class="tbd">da confermare</span></dd>
+        <dt>Chi</dt>
+        <dd>Nadine e Leonardo, Ingegneria Informatica ed Elettronica</dd>
+      </dl>
+    </section>
+
+    <section class="card reply">
+      <h2>Ci sarai? <span class="tag">conferma</span></h2>
+      <p>Faccelo sapere appena puoi scrivendo a <strong>Nadine</strong> o a <strong>Leonardo</strong>: ci serve per organizzarci.</p>
+    </section>
+  </section>
+
+  <!-- ===== CENA ===== -->
+  <section class="view" id="v-cena" hidden>
+    <button type="button" class="back" data-home>← Indietro</button>
+
+    <section class="soon-screen">
+      <span class="ko">곧 공개!</span>
+      <div class="big">Coming soon<span class="cur"></span></div>
+      <p>Stiamo ancora organizzando la cena. Tieniti libero la sera!</p>
+      <div class="date-ipo">Sabato 5 dicembre 2026 <span class="tbd">da confermare</span></div>
+      <div class="bar" aria-hidden="true"><i></i></div>
+      <div class="mono">cena.exe · caricamento in corso…</div>
+      <button type="button" class="link" id="peek" style="color:var(--term-dim)">Sbircia i dettagli</button>
+      <div class="hint" id="hint" aria-live="polite"></div>
+    </section>
+  </section>
+
+  <footer>
+    <div class="sig">Nadine &amp; Leonardo</div>
+    <div>Perugia · dicembre 2026</div>
+  </footer>
+</main>
+
+<script>
+(function(){
+  // saluto personalizzato: il link può finire con #Nome
+  var h = decodeURIComponent((location.hash || "").replace("#",""));
+  if (h && /^[A-Za-z0-9-]+$/.test(h)) {
+    document.getElementById("hello").textContent = "Ciao " + h.replace(/-/g," ") + "!";
+  }
+
+  // navigazione tra le due "pagine"
+  var views = { home: document.getElementById("v-home"), procl: document.getElementById("v-procl"), cena: document.getElementById("v-cena") };
+  function show(name){
+    for (var k in views) { views[k].hidden = (k !== name); }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  document.getElementById("go-procl").addEventListener("click", function(){ show("procl"); });
+  document.getElementById("go-cena").addEventListener("click", function(){ show("cena"); });
+  var backs = document.querySelectorAll("[data-home]");
+  for (var i = 0; i < backs.length; i++) { backs[i].addEventListener("click", function(){ show("home"); }); }
+
+  // sbirciatina sulla cena: ogni clic una risposta diversa
+  var hints = [
+    "Accesso negato: dettagli ancora top secret.",
+    "No, non ancora.",
+    "Ancora no… riprova più tardi.",
+    "Insisti? Ok, solo un indizio: si mangia tanto.",
+    "Basta sbirciare, cru cru!"
+  ];
+  var hi = 0;
+  document.getElementById("peek").addEventListener("click", function(){
+    document.getElementById("hint").textContent = hints[hi];
+    hi++;
+    if (hi >= hints.length) { hi = 0; }
+  });
+})();
+</script>
+
+</body></html>
