@@ -119,6 +119,24 @@ dl.info dd{margin:0;min-width:0}
 .tbd{display:inline-block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;
   background:var(--tbd-bg);color:var(--tbd-fg);border-radius:999px;padding:1px 8px;margin-left:4px;vertical-align:2px}
 
+/* riquadro blu */
+.card.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.card.dark h2 .tag{color:var(--term-dim)}
+.card.dark dl.info dt{color:var(--term-pk)}
+.card.dark .addr{color:var(--term-dim)}
+.card.dark .maps{background:transparent;color:#fff;border-color:var(--term-dim)}
+.card.dark .maps:hover{border-color:#fff}
+.card.dark .ok-pill{background:#e3f6ea;color:#1e6646}
+.card.dark{position:relative}
+/* il piccione sbuca da dietro il riquadro: z-index negativo lo mette sotto lo sfondo blu */
+.corner-pigeon{position:absolute;top:-70px;right:18px;width:110px;height:121px;z-index:-1;transform:rotate(-4deg)}
+
+/* la serata */
+.serata{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center}
+.serata svg{width:72px;height:60px}
+.serata b{display:block;font-family:var(--f-display);font-size:1.15rem;margin-top:4px}
+.serata span{color:var(--ink-soft);font-size:.85rem;line-height:1.35;display:block}
+
 /* coming soon */
 .soon-screen{background:var(--ink);color:var(--term-fg);border-radius:14px;
   box-shadow:0 6px 18px rgba(31,47,87,.12);padding:30px 22px 26px;text-align:center;
@@ -135,6 +153,7 @@ dl.info dd{margin:0;min-width:0}
 .mono{font-family:var(--f-mono);font-size:.8rem;color:var(--term-dim)}
 .hint{font-size:.95rem;color:var(--term-ok);min-height:1.4em}
 .date-ipo{font-family:var(--f-display);font-size:1.15rem;color:#fff}
+.soon-screen .venue{font-family:var(--f-display);font-weight:700;font-size:1.6rem;color:#fff;margin-top:8px}
 
 /* RSVP */
 form{display:flex;flex-direction:column;gap:16px}
@@ -274,6 +293,72 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
       </g>
     </symbol>
 
+    <!-- piccione visto di fronte, con il tocco da laurea -->
+    <symbol id="i-pigeon-front" viewBox="0 0 100 110">
+      <defs>
+        <linearGradient id="neck2" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#4fae8f"/><stop offset=".5" stop-color="#7d5aa6"/><stop offset="1" stop-color="#4fae8f"/>
+        </linearGradient>
+      </defs>
+      <g filter="url(#wobble)">
+        <!-- zampe -->
+        <path d="M42 97 V104 M37 105 H47 M58 97 V104 M53 105 H63" fill="none" stroke="#d98592" stroke-width="2.8" stroke-linecap="round"/>
+        <!-- corpo, petto pieno -->
+        <path d="M50 44 C70 44 79 60 78 76 C77 90 65 98 50 98 C35 98 23 90 22 76 C21 60 30 44 50 44Z" fill="#aeb6c4"/>
+        <!-- ali ripiegate lungo i fianchi, con le barre scure -->
+        <path d="M27 58 C19 68 19 86 29 95 C34 86 34 70 27 58Z" fill="#c7cedb"/>
+        <path d="M73 58 C81 68 81 86 71 95 C66 86 66 70 73 58Z" fill="#c7cedb"/>
+        <path d="M22 76 C25 77 28 78 31 78 M23 83 C26 84 29 85 31 85 M78 76 C75 77 72 78 69 78 M77 83 C74 84 71 85 69 85" fill="none" stroke="#2f3a52" stroke-width="2.6" stroke-linecap="round"/>
+        <!-- collo con i riflessi verde-viola -->
+        <path d="M36 48 C40 58 60 58 64 48 C63 60 57 65 50 65 C43 65 37 60 36 48Z" fill="url(#neck2)" opacity=".9"/>
+        <!-- testa -->
+        <circle cx="50" cy="37" r="15" fill="#6c7790"/>
+        <!-- occhi arancio con la pupilla -->
+        <circle cx="43.5" cy="35" r="3.4" fill="#e8742c"/><circle cx="43.8" cy="35" r="1.6" fill="#1b2235"/><circle cx="44.6" cy="34.2" r=".6" fill="#fff"/>
+        <circle cx="56.5" cy="35" r="3.4" fill="#e8742c"/><circle cx="56.2" cy="35" r="1.6" fill="#1b2235"/><circle cx="57" cy="34.2" r=".6" fill="#fff"/>
+        <!-- becco con la caruncola chiara -->
+        <path d="M47.5 41 H52.5 L50 47.5 Z" fill="#3a3f4a"/>
+        <ellipse cx="50" cy="40.8" rx="2.6" ry="1.4" fill="#f1ece4"/>
+        <!-- tocco da laurea -->
+        <path d="M50 14 L70 21.5 L50 29 L30 21.5 Z" fill="#141f3d" stroke="#e7ecf7" stroke-width="1.3" stroke-linejoin="round"/>
+        <path d="M39 25.5 V29 C43 32 57 32 61 29 V25.5 L50 29.4Z" fill="#141f3d"/>
+        <path d="M50 21.5 L66 25 V33" fill="none" stroke="#d6457a" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="66" cy="34.6" r="2.4" fill="#d6457a"/>
+      </g>
+    </symbol>
+
+    <!-- piatto del buffet -->
+    <symbol id="i-plate" viewBox="0 0 120 100">
+      <g filter="url(#wobble)">
+        <ellipse cx="60" cy="62" rx="46" ry="16" fill="#eef3f8"/>
+        <path class="st" d="M14 62 C14 72 34 80 60 80 C86 80 106 72 106 62 C106 52 86 46 60 46 C34 46 14 52 14 62Z M30 62 C30 56 44 53 60 53 C76 53 90 56 90 62"/>
+        <circle cx="46" cy="50" r="8" fill="#f6b7cf"/><circle class="st" cx="46" cy="50" r="8"/>
+        <circle cx="66" cy="46" r="9" fill="#fff4c2"/><circle class="st" cx="66" cy="46" r="9"/>
+        <path d="M78 52 C82 44 92 44 92 52" fill="#8fe3b0"/><path class="st" d="M78 52 C82 44 92 44 92 52"/>
+      </g>
+    </symbol>
+
+    <!-- note musicali -->
+    <symbol id="i-music" viewBox="0 0 120 100">
+      <g filter="url(#wobble)">
+        <ellipse cx="40" cy="76" rx="10" ry="7" fill="#f6b7cf"/>
+        <ellipse cx="80" cy="68" rx="10" ry="7" fill="#fff4c2"/>
+        <path class="st" d="M30 76 C30 70 36 69 40 69 C46 69 50 72 50 76 C50 81 44 83 40 83 C34 83 30 80 30 76Z M70 68 C70 62 76 61 80 61 C86 61 90 64 90 68 C90 73 84 75 80 75 C74 75 70 72 70 68Z M50 76 V24 L90 16 V68 M50 36 L90 28"/>
+        <path d="M18 30 L22 22 M14 44 H22 M100 26 L106 20 M100 40 H108" fill="none" stroke="#d6457a" stroke-width="2.6" stroke-linecap="round"/>
+      </g>
+    </symbol>
+
+    <!-- torta -->
+    <symbol id="i-cake" viewBox="0 0 120 100">
+      <g filter="url(#wobble)">
+        <path d="M26 52 H94 V84 H26Z" fill="#f6b7cf"/>
+        <path class="st" d="M26 52 H94 V84 H26Z M20 86 H100"/>
+        <path d="M26 52 C32 62 38 62 44 54 C50 62 56 62 62 54 C68 62 74 62 80 54 C86 62 92 60 94 54" fill="#fbfcfe" stroke="#1f2f57" stroke-width="2.6" stroke-linejoin="round"/>
+        <path class="st" d="M60 52 V34"/>
+        <path d="M60 30 C55 24 58 18 60 14 C62 18 65 24 60 30Z" fill="#d6457a"/>
+      </g>
+    </symbol>
+
     <symbol id="i-res" viewBox="0 0 140 40">
       <path class="st" filter="url(#wobble)" d="M6 20 H34 L40 8 L52 32 L64 8 L76 32 L88 8 L100 32 L106 20 H134"/>
     </symbol>
@@ -347,9 +432,9 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
       </button>
       <button type="button" class="door soon" id="go-cena">
         <svg aria-hidden="true"><use href="#i-glass"/></svg>
-        <span class="dname">Cena</span>
+        <span class="dname">Festa</span>
         <span class="dsub">La festa dopo, tutti insieme</span>
-        <span class="go">Coming soon →</span>
+        <span class="go">Apri →</span>
       </button>
     </div>
   </section>
@@ -404,19 +489,40 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
   <section class="view" id="v-cena" hidden>
     <button type="button" class="back" data-home>← Indietro</button>
 
-    <section class="soon-screen">
-      <span class="ko">곧 공개!</span>
-      <div class="big">Coming soon<span class="cur"></span></div>
-      <p>Stiamo ancora organizzando la cena. Tieniti libero la sera!</p>
-      <div class="date-ipo">Sabato 5 dicembre 2026 <span class="tbd">da confermare</span></div>
-      <div class="bar" aria-hidden="true"><i></i></div>
-      <div class="mono">cena.exe · caricamento in corso…</div>
-      <button type="button" class="link" id="peek" style="color:var(--term-dim)">Sbircia i dettagli</button>
-      <div class="hint" id="hint" aria-live="polite"></div>
+    <section class="card dark">
+      <svg class="corner-pigeon" aria-hidden="true"><use href="#i-pigeon-front"/></svg>
+      <h2>Festa <span class="tag">dove &amp; quando</span> <span class="ok-pill">confermata</span></h2>
+      <dl class="info">
+        <dt>Quando</dt>
+        <dd>Sabato 5 dicembre 2026<br><span class="addr">dalle 20:30, dopo cena</span></dd>
+        <dt>Dove</dt>
+        <dd>Golden Age, Corciano<br><span class="addr">Via Ferraioli 5, 06073 Corciano (PG)</span><br><a class="maps" href="https://www.google.com/maps/search/?api=1&amp;query=Golden+Age%2C+Via+Ferraioli+5%2C+06073+Corciano+PG" target="_blank" rel="noopener">Apri in Google Maps ↗</a></dd>
+      </dl>
+    </section>
+
+    <section class="card">
+      <h2>Cosa ci aspetta <span class="tag">la serata</span></h2>
+      <div class="serata">
+        <div><svg aria-hidden="true"><use href="#i-plate"/></svg><b>Buffet</b><span>Tanto, tanto cibo</span></div>
+        <div><svg aria-hidden="true"><use href="#i-music"/></svg><b>Musica</b><span>Tanta musica e divertimento</span></div>
+        <div><svg aria-hidden="true"><use href="#i-cake"/></svg><b>Torta</b><span>Il momento più dolce</span></div>
+      </div>
+    </section>
+
+    <section class="terminal" aria-label="Codice Java della festa">
+<pre class="code"><span class="ty">Festa</span> festa = <span class="kw">new</span> <span class="ty">Festa</span>(<span class="pk">"Golden Age"</span>, <span class="pk">"20:30"</span>);
+festa.apriBuffet();   <span class="dim">// tanto, tanto cibo</span>
+festa.alzaMusica();   <span class="dim">// e si balla</span>
+festa.tagliaTorta();
+festa.festeggia(<span class="pk">"tutti insieme"</span>);</pre>
+      <div class="out">
+        <div><span class="dim">$</span> java Festa</div>
+        <div><span class="ok">BUILD SUCCESSFUL</span> · ci vediamo lì!</div>
+      </div>
     </section>
 
     <section class="card reply">
-      <h2>Ci sarai? <span class="tag">cena</span></h2>
+      <h2>Ci sarai? <span class="tag">festa</span></h2>
       <form class="rsvp" data-evento="Cena" novalidate>
         <div>
           <label for="c-nome">Il tuo nome</label>
@@ -432,6 +538,10 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
         <div>
           <label for="c-msg">Scrivi qualcosa di carino!</label>
           <textarea id="c-msg" name="messaggio" maxlength="1000"></textarea>
+        </div>
+        <div>
+          <label for="c-all">Allergie o intolleranze</label>
+          <input type="text" id="c-all" name="allergeni" maxlength="200" placeholder="Es. glutine, lattosio, frutta a guscio…">
         </div>
         <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
         <p class="err" aria-live="polite" hidden></p>
@@ -470,21 +580,6 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
   var backs = document.querySelectorAll("[data-home]");
   for (var i = 0; i < backs.length; i++) { backs[i].addEventListener("click", function(){ show("home"); }); }
 
-  // sbirciatina sulla cena: ogni clic una risposta diversa
-  var hints = [
-    "Accesso negato: dettagli ancora top secret.",
-    "No, non ancora.",
-    "Ancora no… riprova più tardi.",
-    "Insisti? Ok, solo un indizio: si mangia tanto.",
-    "Basta sbirciare, cru cru!"
-  ];
-  var hi = 0;
-  document.getElementById("peek").addEventListener("click", function(){
-    document.getElementById("hint").textContent = hints[hi];
-    hi++;
-    if (hi >= hints.length) { hi = 0; }
-  });
-
   // ===== moduli "Ci sarai?" =====
   // Le risposte arrivano per email tramite Web3Forms (la chiave è pubblica per costruzione)
   var WEB3FORMS_KEY = "4c8837db-9b8b-429d-a405-4d142d1f93e1";
@@ -501,6 +596,7 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
     var send = form.querySelector(".send");
     var nome = form.querySelector("[name=nome]");
     var msg = form.querySelector("[name=messaggio]");
+    var all = form.querySelector("[name=allergeni]");
     var choices = form.querySelectorAll(".choice button");
     var presenza = "";
 
@@ -531,9 +627,9 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
       var evento = form.getAttribute("data-evento");
       var testoNome = nome.value.trim();
       var testoMsg = msg.value.trim();
+      var testoAll = all ? all.value.trim() : "";
 
-      // invio per email
-      var email = postJson("https://api.web3forms.com/submit", {
+      var datiEmail = {
         access_key: WEB3FORMS_KEY,
         subject: evento + ": " + testoNome + " → " + presenza,
         from_name: "Invito di laurea",
@@ -541,11 +637,18 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
         Nome: testoNome,
         "Ci sarà?": presenza,
         Messaggio: testoMsg || "(nessun messaggio)"
-      }).then(function(res){ if (!res.success) { throw new Error(res.message); } });
+      };
+      if (all) { datiEmail.Allergeni = testoAll || "(nessuno)"; }
+      // nel file risposte.txt gli allergeni finiscono in coda al messaggio
+      var msgFile = testoMsg;
+      if (testoAll) { msgFile = (testoMsg ? testoMsg + " | " : "") + "Allergeni: " + testoAll; }
+
+      // invio per email
+      var email = postJson("https://api.web3forms.com/submit", datiEmail).then(function(res){ if (!res.success) { throw new Error(res.message); } });
 
       // riga nel file risposte.txt su GitHub
       var file = !WORKER_URL ? Promise.reject(new Error("worker non configurato")) :
-        postJson(WORKER_URL, { evento: evento, nome: testoNome, presenza: presenza, messaggio: testoMsg })
+        postJson(WORKER_URL, { evento: evento, nome: testoNome, presenza: presenza, messaggio: msgFile })
           .then(function(res){ if (!res.ok) { throw new Error(res.error); } });
 
       // basta che almeno uno dei due salvataggi riesca
