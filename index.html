@@ -119,6 +119,19 @@ dl.info dd{margin:0;min-width:0}
 .tbd{display:inline-block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;
   background:var(--tbd-bg);color:var(--tbd-fg);border-radius:999px;padding:1px 8px;margin-left:4px;vertical-align:2px}
 
+/* timeline della proclamazione */
+.timeline{list-style:none;margin:10px 0 0;padding:0 0 0 4px;position:relative}
+.timeline::before{content:"";position:absolute;left:9px;top:10px;bottom:12px;border-left:2px dashed var(--line)}
+.timeline li{position:relative;padding:0 0 12px 26px;line-height:1.35}
+.timeline li::before{content:"";position:absolute;left:0;top:4px;width:12px;height:12px;border-radius:50%;background:var(--ink);border:2px solid var(--card);box-shadow:0 0 0 1px var(--ink)}
+.timeline li.pk::before{background:var(--hibiscus);box-shadow:0 0 0 1px var(--hibiscus)}
+.timeline li.big::before{background:#2f9e6b;box-shadow:0 0 0 1px #2f9e6b;width:14px;height:14px;left:-1px;top:3px}
+.timeline li.end{padding-bottom:0}
+.timeline li.end::before{background:var(--card);box-shadow:0 0 0 2px var(--ink-soft)}
+.timeline time{display:block;font-family:var(--f-mono);font-weight:700;font-size:.95rem}
+.timeline span{color:var(--ink-soft);font-size:.95rem}
+.timeline li.big span{color:var(--ink);font-weight:600}
+
 /* riquadro blu */
 .card.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
 .card.dark h2 .tag{color:var(--term-dim)}
@@ -447,11 +460,16 @@ footer .sig{font-family:var(--f-display);font-style:italic;font-size:1.1rem;colo
       <h2>Proclamazione <span class="tag">dove &amp; quando</span></h2>
       <dl class="info">
         <dt>Quando</dt>
-        <dd>Giovedì 3 dicembre 2026<br><span class="addr">Orario</span> <span class="tbd">da confermare</span></dd>
+        <dd>Giovedì 3 dicembre 2026
+          <ol class="timeline">
+            <li><time>9:30</time><span>Leonardo discute la tesi</span></li>
+            <li class="pk"><time>10:15</time><span>Nadine discute la tesi</span></li>
+            <li class="big"><time>11:20</time><span>Proclamazione: Leonardo e Nadine diventano dottori!</span></li>
+            <li class="end"><span>Poi foto e abbracci fuori dall'Aula Magna</span></li>
+          </ol>
+        </dd>
         <dt>Dove</dt>
-        <dd>Dipartimento di Ingegneria, Università degli Studi di Perugia<br><span class="addr">Via Goffredo Duranti 93, 06125 Perugia</span><br><a class="maps" href="https://www.google.com/maps/search/?api=1&amp;query=Dipartimento+di+Ingegneria+Universit%C3%A0+di+Perugia%2C+Via+Goffredo+Duranti+93%2C+06125+Perugia" target="_blank" rel="noopener">Apri in Google Maps ↗</a><br><span class="addr">Aula</span> <span class="tbd">da confermare</span></dd>
-        <dt>Chi</dt>
-        <dd>Nadine e Leonardo, Ingegneria Informatica ed Elettronica</dd>
+        <dd>Aula Magna<br><span class="addr">Dipartimento di Ingegneria, Università degli Studi di Perugia</span><br><span class="addr">Via Goffredo Duranti 93, 06125 Perugia</span><br><a class="maps" href="https://www.google.com/maps/search/?api=1&amp;query=Dipartimento+di+Ingegneria+Universit%C3%A0+di+Perugia%2C+Via+Goffredo+Duranti+93%2C+06125+Perugia" target="_blank" rel="noopener">Apri in Google Maps ↗</a></dd>
       </dl>
     </section>
 
